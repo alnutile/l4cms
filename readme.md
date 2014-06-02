@@ -1,21 +1,113 @@
-## Laravel PHP Framework
+## Quick intro to Laravel using a custom CMS app I made
 
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/version.png)](https://packagist.org/packages/laravel/framework) [![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.png)](https://packagist.org/packages/laravel/framework) [![Build Status](https://travis-ci.org/laravel/framework.png)](https://travis-ci.org/laravel/framework)
+![intro](https://dl-web.dropbox.com/get/Screenshots/intro_image.png?_subject_uid=54803135&w=AADdI8YLw5iRjK91_3LjSHq7b7z0ibM8KY4P7MicRH9UFA)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, and caching.
+This is mainly to show an example of a small CMS being built in Laravel. CMS (Content Management System) that is at it's most basic level, Authentication, Simple Content Types etc.
 
-Laravel aims to make the development process a pleasing one for the developer without sacrificing application functionality. Happy developers make the best code. To this end, we've attempted to combine the very best of what we have seen in other web frameworks, including frameworks implemented in other languages, such as Ruby on Rails, ASP.NET MVC, and Sinatra.
+What we will cover.
 
-Laravel is accessible, yet powerful, providing powerful tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+  * Installing the "CMS" and what Page Types it comes with
+  * Looking at the folder layout "Where is...."
+  * App config setting up the site
+  * PHP Artisan command to migrate the site
+  * Routes
+  * Page example looking at the wysiwyg, Controller, View etc
+  * Tags - lets add a many to many relationship
+  
 
-## Official Documentation
+This is NOT the end all setup just an example. There are links below to quality videos, blogs posts docs etc to take you to the next level, not only in Laravel but just Object Oriented Design and good Architecture in general.
 
-Documentation for the entire framework can be found on the [Laravel website](http://laravel.com/docs).
+Note the theme has it's own license and you need to purchase it [here](https://wrapbootstrap.com/theme/colorfrog-WB01PG0H4) in order to use it.
 
-### Contributing To Laravel
+## Install the "CMS" and what Page Types it comes with
 
-**All issues and pull requests should be filed on the [laravel/framework](http://github.com/laravel/framework) repository.**
+The repo is here https://github.com/alnutile/cms
 
-### License
+In time I will add more features but it really is an app that was made for a client that the base of it I wanted to fork off for later use.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+Run the basic laravel install steps noted on their site http://laravel.com/docs/quick
+
+## What Page Types
+
+ * Pages are the main landing pages for most of the site with a slug to manage the url [1]. More on Pages shortly.
+ * Portfolios was how this project started. Basically you make One and then make projects that reference it. 
+ * Projects are just that. They fit in a Portfolio
+ * Menu Sorting there is an admin area for menu sorting as well. Right now it is just for the top left menu. (not the black top nav)
+ 
+All these "Admin" links can be seen below
+
+![admin_bar](https://dl-web.dropbox.com/get/Screenshots/admin_link.png?_subject_uid=54803135&w=AAAXvu_aZZUUGLFbgByRli-WjFgDpVmUDnQxverzi5_ISg)
+
+
+### Every landing page is a Page 
+
+Every URLs is Page, Project or Portfolio so the editor can always edit the description of the page even if there is a "collection" under it. For example /all_projects is a Page that just happens to also show a collection of "Projects" under it. Ideally this will be a less hard coded relationship BUT this particular example just needed a simple data set.
+
+
+There are Portfolio and Project pages as well that the edit can edit the description on etc.
+
+
+## Looking at the folder layout
+
+This is a standard Laravel App. The one key folder is **app/CMS** for some items. But otherwise the Controllers, Models etc have all the needed data. [2]
+
+In app/CMS there is the Menu Facade, and the MenuService to make managing the menu system easier. [3]
+
+The system puts it's uploaded files under public/img in settings, banners etc
+
+## App config setting up the site
+
+The app default to sqlite and the bootstrap/start.php will default to local without you needing to set anything.
+
+Running migrations will get you a good sample set of data. You can always turn this off in app/database/seeds
+
+In the app/database/seeds/UsersTableSeeder.php file is the admin and test user emails and passwords to login.
+
+## Routes
+
+The app/routes.php is where you can manage routes and see what is there right now. 
+
+## Page Example
+
+You can edit a page or add a page.
+
+Once in there you will see this
+
+![image_page_edit](https://dl-web.dropbox.com/get/Screenshots/edit.png?_subject_uid=54803135&w=AADonXAFhGpiKY5JL9u6d248TPQKJMPCDcHTwUi2s2Hk5Q)
+
+
+
+You can give the page a title, SEO title, upload images and files via the wysiwyg and set the slug (Published coming soon so there can be a workflow)
+
+## Tags
+
+There is a tagging feature that does not yet have the UI setup. (coming soon). The resource is setup but needs to be placed in the view
+
+In php artisan tinker we can mess around with tags thought
+
+~~~
+
+php artisan tinker
+$tag = new Tag(['name' => "Test 4"]);
+Portfolio::find(1)->tags()->save($tag);
+Portfolio::find(1)->tags->toArray();
+Tag::find(1)->portfolios->toArray();
+Portfolio::find(1)->tags()->detach(1);
+Portfolio::find(1)->tags()->attach(1);
+~~~
+
+So we are making a tag, saving it to Portfolio 1. Seeing it attached to Portfolio 1 and Seeing Portfolios attached to it.
+
+## Links
+
+ * Great videos on Laravel, Oop and design patters https://laracasts.com/
+ * Laravel own docs are great http://laravel.com/docs
+ * Forums and Chat room http://laravel.io/forum
+ * Great overview of Laravel app building http://culttt.com/2013/04/29/getting-started-with-laravel-4/
+ 
+
+## Footnotes
+
+[1] This will be refactored shortly
+[2] This will be moved shortly to make it way more extendable but leaving the core easy to manage.
+[3] Refactor this out so menu is a manyToMany relationship with the models that will use it.
